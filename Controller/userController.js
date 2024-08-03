@@ -1,6 +1,5 @@
-const {usermodel}=require("../Model/usermodel.js")
+const users=require("../Model/usermodel.js")
 const mongoose=require('mongoose')
-const users=mongoose.model("usermodel",usermodel)
 const bcrypt=require("bcryptjs")
 const JWT =require('jsonwebtoken')
 const auth = require("../Middleware/auth.js")
