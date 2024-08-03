@@ -1,4 +1,4 @@
-const users=require("../Model/usermodel")
+const users=require("../Model/userModel")
 const bcrypt=require("bcryptjs")
 const JWT =require('jsonwebtoken')
 const createUser = async (req, res) => {
