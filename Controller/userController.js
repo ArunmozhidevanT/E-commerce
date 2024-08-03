@@ -1,8 +1,6 @@
-const users=require("../Model/usermodel.js")
-const mongoose=require('mongoose')
+const users=require("../Model/usermodel")
 const bcrypt=require("bcryptjs")
 const JWT =require('jsonwebtoken')
-const auth = require("../Middleware/auth.js")
 const createUser = async (req, res) => {
     const { username, Email, PhoneNo, Password } = req.body;
     
