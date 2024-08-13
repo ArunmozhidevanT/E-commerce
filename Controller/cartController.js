@@ -1,4 +1,3 @@
-const mongoose = require('mongoose');
 const cart= require('../Model/cartModel');
 const AddtoCart = async (req, res) => {
     const { product_id, quantity,price} = req.body;
@@ -46,7 +45,7 @@ const AddtoCart = async (req, res) => {
  
         const disp=await cart.findOne({Email:req.user}); 
         if(!disp){
-            res.status(401).json({
+            return res.status(401).json({
                 Msg:"User does not exist"
             }) 
         }
@@ -58,15 +57,15 @@ const AddtoCart = async (req, res) => {
             total: product.quantity*product.price,
         }));
         const stotal = PData.reduce((sum,item)=> sum + item.total,0);
-        return {
+        res.status(200).json({
             Msg:"successfully fetched",
             Products:PData,
             Subtotal: stotal
-        }
+        });
 
     }catch(err){
         res.status(500).json({
-            Msg:"Serve Error"
+            Msg:"Server Error"
         })
     }
   };

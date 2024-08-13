@@ -1,8 +1,7 @@
-const mongoose = require("mongoose");
 const order = require("../Model/orderModel");
 const  cart = require('../Model/cartModel');
 const { v4: uuidv4 } = require('uuid');
-const { Disprd } = require("../Controller/cartController");
+//const { Disprd } = require("../Controller/cartController");
 
 
 const createorder = async(req,res)=>{
@@ -17,8 +16,13 @@ const createorder = async(req,res)=>{
         if (!userCart) {
             return res.status(404).json({ msg: "Cart not found" });
         }
-        const {Products,Subtotal}= await Disprd(req,res);
-        //const totalAmount = userCart.Product.reduce((sum, product) => sum + product.quantity * product.price, 0);
+        const Products = userCart.Product.map(product => ({
+            product_id: product.product_id,
+            quantity: product.quantity,
+            price: product.price,
+            total: product.quantity * product.price,
+        }));
+        const Subtotal = Products.reduce((sum, item) => sum + item.total, 0);
         const currentDate = new Date();
         const expectedDeliveryDate = new Date(currentDate);
         expectedDeliveryDate.setDate(currentDate.getDate() + 10);
@@ -31,15 +35,11 @@ const createorder = async(req,res)=>{
             address:address,
             orderDate: currentDate,
             ExtDate: expectedDeliveryDate,
-            Product: Products.map(product => ({
-                product_id: product.product_id,
-                quantity: product.quantity,
-                price: product.price,
-                total: product.quantity*product.price,
-            })),
+            Product: Products,
             Totalamount:Subtotal,
             status: "In progress"
         });
+        
         await newOrder.save();
         await cart.deleteOne({Email});
         if (!res.headersSent) {
